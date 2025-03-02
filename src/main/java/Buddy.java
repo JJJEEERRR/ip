@@ -48,6 +48,9 @@ public class Buddy {
                 case "event":
                     addTask(command, description);
                     break;
+                case "delete": // 新增 delete 命令
+                    deleteTask(parts);
+                    break;
                 default:
                     System.out.println("  ____________________________________________________________");
                     System.out.println("  Uh-oh! That command went right over my head. Mind trying again?");
@@ -157,6 +160,34 @@ public class Buddy {
             }
         } catch (NumberFormatException e) {
             System.out.println("Invalid task number.");
+        }
+    }
+
+    private void deleteTask(String[] parts) {
+        if (parts.length < 2) {
+            System.out.println("  ____________________________________________________________");
+            System.out.println("  Please provide a task number to delete.");
+            System.out.println("  ____________________________________________________________");
+            return;
+        }
+        try {
+            int taskIndex = Integer.parseInt(parts[1]) - 1;
+            if (taskIndex >= 0 && taskIndex < tasks.size()) {
+                Task removedTask = tasks.remove(taskIndex);
+                System.out.println("  ____________________________________________________________");
+                System.out.println("  Noted. I've removed this task:");
+                System.out.println("    " + removedTask);
+                System.out.println("  Now you have " + tasks.size() + " tasks in the list.");
+                System.out.println("  ____________________________________________________________");
+            } else {
+                System.out.println("  ____________________________________________________________");
+                System.out.println("  OOPS!!! Invalid task index.");
+                System.out.println("  ____________________________________________________________");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("  ____________________________________________________________");
+            System.out.println("  OOPS!!! Invalid task number.");
+            System.out.println("  ____________________________________________________________");
         }
     }
 }
