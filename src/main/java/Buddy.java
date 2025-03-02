@@ -9,11 +9,13 @@ public class Buddy {
     }
 
     public void run() {
-        String logo = """
-                 /\\_/\\ \s
-                ( o.o )\s
-                 > ^ < \s
-                """;
+        String logo = "Buddy";
+
+//                "  /\\_/\\  \n"
+//                + " ( o.o ) \n"
+//                + "  > ^ <  \n";
+
+
         System.out.println("Hello from\n" + logo);
         System.out.println("Hello! I'm Buddy");
         System.out.println("What can I do for you?");
