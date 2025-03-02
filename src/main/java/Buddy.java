@@ -1,10 +1,8 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Buddy {
-    private static final int MAX_TASKS = 100;
-    private String[] tasks = new String[MAX_TASKS];
-    private boolean[] taskDone = new boolean[MAX_TASKS]; //. 用于跟踪任务完成状态的数组
-    private int taskCount = 0;
+    private ArrayList<Task> tasks = new ArrayList<>();
 
     public static void main(String[] args) {
         new Buddy().run();
@@ -25,45 +23,65 @@ public class Buddy {
 
         while (true) {
             input = scanner.nextLine();
-            String[] parts = input.split(" "); // 将输入按空格分割成命令和参数
-            String command = parts[0]; // 获取命令
+            String[] parts = input.split(" ", 2); // 将输入分割为命令和描述
+            String command = parts[0];
+            String description = parts.length > 1 ? parts[1] : "";
 
-            if (command.equals("bye")) {
-                break;
-            } else if (command.equals("list")) {
-                listTasks();
-            } else if (command.equals("mark")) { // 处理 mark 命令
-                markTask(parts);
-            } else if (command.equals("unmark")) { //处理 unmark 命令
-                unmarkTask(parts);
-            } else {
-                addTask(input);
+            switch (command) {
+                case "bye":
+                    System.out.println("Bye. Hope to see you again soon!");
+                    scanner.close();
+                    return;
+                case "list":
+                    listTasks();
+                    break;
+                case "mark":
+                    markTask(parts);
+                    break;
+                case "unmark":
+                    unmarkTask(parts);
+                    break;
+                case "todo":
+                case "deadline":
+                case "event":
+                    addTask(command, description);
+                    break;
+                default:
+                    System.out.println("OOPS!!! I'm sorry, but I don't know what that means :-(");
             }
         }
-
-        System.out.println("Bye. Hope to see you again soon!");
-        scanner.close();
     }
 
-    private void addTask(String task) {
-        if (taskCount < MAX_TASKS) {
-            tasks[taskCount] = task;
-            taskDone[taskCount] = false;
-            taskCount++;
+    private void addTask(String command, String description) {
+        Task task = null;
+        switch (command) {
+            case "todo":
+                task = new Todo(description);
+                break;
+            case "deadline":
+                String[] deadlineParts = description.split(" /by ");
+                task = new Deadline(deadlineParts[0], deadlineParts[1]);
+                break;
+            case "event":
+                String[] eventParts = description.split(" /from | /to ");
+                task = new Event(eventParts[0], eventParts[1], eventParts[2]);
+                break;
+        }
+        if (task != null) {
+            tasks.add(task);
             System.out.println("  ____________________________________________________________");
-            System.out.println("    added: " + task);
+            System.out.println("  Got it. I've added this task:");
+            System.out.println("    " + task);
+            System.out.println("  Now you have " + tasks.size() + " tasks in the list.");
             System.out.println("  ____________________________________________________________");
-        } else {
-            System.out.println("Task list is full.");
         }
     }
 
     private void listTasks() {
         System.out.println("  ____________________________________________________________");
         System.out.println("  Here are the tasks in your list:");
-        for (int i = 0; i < taskCount; i++) {
-            String done = taskDone[i] ? "[X]" : "[ ]";
-            System.out.println("  " + (i + 1) + "." + done + " " + tasks[i]);
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println("  " + (i + 1) + ". " + tasks.get(i));
         }
         System.out.println("  ____________________________________________________________");
     }
@@ -75,11 +93,12 @@ public class Buddy {
         }
         try {
             int taskIndex = Integer.parseInt(parts[1]) - 1;
-            if (taskIndex >= 0 && taskIndex < taskCount) {
-                taskDone[taskIndex] = true;
+            if (taskIndex >= 0 && taskIndex < tasks.size()) {
+                Task task = tasks.get(taskIndex);
+                task.markAsDone();
                 System.out.println("  ____________________________________________________________");
                 System.out.println("  Nice! I've marked this task as done:");
-                System.out.println("    [X] " + tasks[taskIndex]);
+                System.out.println("    " + task);
                 System.out.println("  ____________________________________________________________");
             } else {
                 System.out.println("Invalid task index.");
@@ -96,11 +115,12 @@ public class Buddy {
         }
         try {
             int taskIndex = Integer.parseInt(parts[1]) - 1;
-            if (taskIndex >= 0 && taskIndex < taskCount) {
-                taskDone[taskIndex] = false;
+            if (taskIndex >= 0 && taskIndex < tasks.size()) {
+                Task task = tasks.get(taskIndex);
+                task.markAsUndone();
                 System.out.println("  ____________________________________________________________");
                 System.out.println("  OK, I've marked this task as not done yet:");
-                System.out.println("    [ ] " + tasks[taskIndex]);
+                System.out.println("    " + task);
                 System.out.println("  ____________________________________________________________");
             } else {
                 System.out.println("Invalid task index.");
