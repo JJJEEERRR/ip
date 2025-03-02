@@ -49,12 +49,22 @@ public class Buddy {
                     addTask(command, description);
                     break;
                 default:
-                    System.out.println("OOPS!!! I'm sorry, but I don't know what that means :-(");
+                    System.out.println("  ____________________________________________________________");
+                    System.out.println("  Uh-oh! That command went right over my head. Mind trying again?");
+                    System.out.println("  ____________________________________________________________");
             }
         }
     }
 
     private void addTask(String command, String description) {
+        // 检查任务描述是否为空
+        if (description.trim().isEmpty()) {
+            System.out.println("  ____________________________________________________________");
+            System.out.println("  Whoops! You forgot to tell me what the task is! ");
+            System.out.println("  ____________________________________________________________");
+            return;
+        }
+
         Task task = null;
         switch (command) {
             case "todo":
@@ -62,10 +72,24 @@ public class Buddy {
                 break;
             case "deadline":
                 String[] deadlineParts = description.split(" /by ");
+                if (deadlineParts.length != 2) {
+                    System.out.println("  ____________________________________________________________");
+                    System.out.println("  OOPS!!! Invalid deadline format. Please use: deadline <description> /by <date>");
+                    System.out.println("  ____________________________________________________________");
+                    return;
+                }
+                // 可以添加日期格式验证
                 task = new Deadline(deadlineParts[0], deadlineParts[1]);
                 break;
             case "event":
                 String[] eventParts = description.split(" /from | /to ");
+                if (eventParts.length != 3) {
+                    System.out.println("  ____________________________________________________________");
+                    System.out.println("  OOPS!!! Invalid event format. Please use: event <description> /from <start> /to <end>");
+                    System.out.println("  ____________________________________________________________");
+                    return;
+                }
+                // 可以添加日期格式验证
                 task = new Event(eventParts[0], eventParts[1], eventParts[2]);
                 break;
         }
@@ -103,10 +127,14 @@ public class Buddy {
                 System.out.println("    " + task);
                 System.out.println("  ____________________________________________________________");
             } else {
-                System.out.println("Invalid task index.");
+                System.out.println("  ____________________________________________________________");
+                System.out.println("  OOPS!!! Invalid task index.");
+                System.out.println("  ____________________________________________________________");
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid task number.");
+            System.out.println("  ____________________________________________________________");
+            System.out.println("  OOPS!!! Invalid task number.");
+            System.out.println("  ____________________________________________________________");
         }
     }
 
