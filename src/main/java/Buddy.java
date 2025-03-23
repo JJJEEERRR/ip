@@ -1,8 +1,12 @@
+import java.io.*;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Buddy {
     private ArrayList<Task> tasks = new ArrayList<>();
+    private static final String DATA_FOLDER = "./data";
+    private static final String DATA_FILE = DATA_FOLDER + "/buddy.txt";
 
     public static void main(String[] args) {
         new Buddy().run();
@@ -11,13 +15,12 @@ public class Buddy {
     public void run() {
         String logo = "Buddy";
 
-//                "  /\\_/\\  \n"
-//                + " ( o.o ) \n"
-//                + "  > ^ <  \n";
-
-
         System.out.println("Hello from\n" + logo);
         System.out.println("Hello! I'm Buddy");
+
+        // Load tasks from file when starting up
+        loadTasks();
+
         System.out.println("What can I do for you?");
 
         Scanner scanner = new Scanner(System.in);
@@ -48,7 +51,7 @@ public class Buddy {
                 case "event":
                     addTask(command, description);
                     break;
-                case "delete": // 新增 delete 命令
+                case "delete":
                     deleteTask(parts);
                     break;
                 default:
@@ -57,6 +60,138 @@ public class Buddy {
                     System.out.println("  ____________________________________________________________");
             }
         }
+    }
+
+    private void loadTasks() {
+        try {
+            // Ensure directory exists
+            File directory = new File(DATA_FOLDER);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            // Check if file exists, if not create a new one
+            File file = new File(DATA_FILE);
+            if (!file.exists()) {
+                file.createNewFile();
+                System.out.println("No existing task data. Starting fresh!");
+                return;
+            }
+
+            // Read file and load tasks
+            Scanner fileScanner = new Scanner(file);
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                if (!line.trim().isEmpty()) {
+                    Task task = parseTaskFromFileLine(line);
+                    if (task != null) {
+                        tasks.add(task);
+                    }
+                }
+            }
+            fileScanner.close();
+            System.out.println("Tasks loaded successfully!");
+        } catch (IOException e) {
+            System.out.println("Error loading tasks: " + e.getMessage());
+        }
+    }
+
+    private Task parseTaskFromFileLine(String line) {
+        try {
+            String[] parts = line.split(" \\| ");
+            if (parts.length < 3) {
+                System.out.println("Warning: Corrupted task data: " + line);
+                return null;
+            }
+
+            String type = parts[0];
+            boolean isDone = parts[1].equals("1");
+            String description = parts[2];
+
+            Task task = null;
+            switch (type) {
+                case "T":
+                    task = new Todo(description);
+                    break;
+                case "D":
+                    if (parts.length < 4) {
+                        System.out.println("Warning: Corrupted deadline data: " + line);
+                        return null;
+                    }
+                    task = new Deadline(description, parts[3]);
+                    break;
+                case "E":
+                    if (parts.length < 5) {
+                        System.out.println("Warning: Corrupted event data: " + line);
+                        return null;
+                    }
+                    task = new Event(description, parts[3], parts[4]);
+                    break;
+                default:
+                    System.out.println("Warning: Unknown task type: " + type);
+                    return null;
+            }
+
+            if (isDone) {
+                task.markAsDone();
+            }
+            return task;
+        } catch (Exception e) {
+            System.out.println("Warning: Error parsing task data: " + line);
+            return null;
+        }
+    }
+
+    private void saveTasks() {
+        try {
+            // Ensure directory exists
+            File directory = new File(DATA_FOLDER);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            // Write tasks to file
+            FileWriter fileWriter = new FileWriter(DATA_FILE);
+            BufferedWriter writer = new BufferedWriter(fileWriter);
+
+            for (Task task : tasks) {
+                writer.write(convertTaskToFileLine(task));
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
+        }
+    }
+
+    private String convertTaskToFileLine(Task task) {
+        StringBuilder sb = new StringBuilder();
+
+        // Task type
+        if (task instanceof Todo) {
+            sb.append("T");
+        } else if (task instanceof Deadline) {
+            sb.append("D");
+        } else if (task instanceof Event) {
+            sb.append("E");
+        }
+
+        // Completion status
+        sb.append(" | ").append(task.isDone ? "1" : "0");
+
+        // Description
+        sb.append(" | ").append(task.description);
+
+        // Additional data based on task type
+        if (task instanceof Deadline) {
+            sb.append(" | ").append(((Deadline) task).by);
+        } else if (task instanceof Event) {
+            sb.append(" | ").append(((Event) task).from);
+            sb.append(" | ").append(((Event) task).to);
+        }
+
+        return sb.toString();
     }
 
     private void addTask(String command, String description) {
@@ -103,6 +238,7 @@ public class Buddy {
             System.out.println("    " + task);
             System.out.println("  Now you have " + tasks.size() + " tasks in the list.");
             System.out.println("  ____________________________________________________________");
+            saveTasks(); // Save after adding
         }
     }
 
@@ -129,6 +265,7 @@ public class Buddy {
                 System.out.println("  Nice! I've marked this task as done:");
                 System.out.println("    " + task);
                 System.out.println("  ____________________________________________________________");
+                saveTasks(); // Save after marking
             } else {
                 System.out.println("  ____________________________________________________________");
                 System.out.println("  OOPS!!! Invalid task index.");
@@ -155,6 +292,7 @@ public class Buddy {
                 System.out.println("  OK, I've marked this task as not done yet:");
                 System.out.println("    " + task);
                 System.out.println("  ____________________________________________________________");
+                saveTasks(); // Save after unmarking
             } else {
                 System.out.println("Invalid task index.");
             }
@@ -179,6 +317,7 @@ public class Buddy {
                 System.out.println("    " + removedTask);
                 System.out.println("  Now you have " + tasks.size() + " tasks in the list.");
                 System.out.println("  ____________________________________________________________");
+                saveTasks(); // Save after deleting
             } else {
                 System.out.println("  ____________________________________________________________");
                 System.out.println("  OOPS!!! Invalid task index.");
