@@ -1,24 +1,23 @@
+package buddy.data;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public class Event extends Task {
-    protected LocalDateTime from;
-    protected LocalDateTime to;
+public class Deadline extends Task {
+    protected LocalDateTime by;
     private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
     private static final DateTimeFormatter DISPLAY_FORMATTER = DateTimeFormatter.ofPattern("MMM d yyyy, h:mm a");
     private static final DateTimeFormatter STORAGE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
-    public Event(String description, String from, String to) {
+    public Deadline(String description, String by) {
         super(description);
-        this.from = parseDateTime(from);
-        this.to = parseDateTime(to);
+        this.by = parseDateTime(by);
     }
 
-    public Event(String description, LocalDateTime from, LocalDateTime to) {
+    public Deadline(String description, LocalDateTime by) {
         super(description);
-        this.from = from;
-        this.to = to;
+        this.by = by;
     }
 
     private LocalDateTime parseDateTime(String dateTimeString) {
@@ -36,35 +35,23 @@ public class Event extends Task {
         }
     }
 
-    public LocalDateTime getFrom() {
-        return from;
+    public LocalDateTime getBy() {
+        return by;
     }
 
-    public LocalDateTime getTo() {
-        return to;
-    }
-
-    public String getFromForStorage() {
-        return from.format(STORAGE_FORMATTER);
-    }
-
-    public String getToForStorage() {
-        return to.format(STORAGE_FORMATTER);
+    public String getByForStorage() {
+        return by.format(STORAGE_FORMATTER);
     }
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from.format(DISPLAY_FORMATTER) +
-                " to: " + to.format(DISPLAY_FORMATTER) + ")";
+        return "[D]" + super.toString() + " (by: " + by.format(DISPLAY_FORMATTER) + ")";
     }
 
     /**
-     * Checks if this event occurs on the given date.
+     * Checks if this deadline occurs on the given date.
      */
     public boolean isOnDate(LocalDateTime date) {
-        return from.toLocalDate().equals(date.toLocalDate()) ||
-                to.toLocalDate().equals(date.toLocalDate()) ||
-                (date.toLocalDate().isAfter(from.toLocalDate()) &&
-                        date.toLocalDate().isBefore(to.toLocalDate()));
+        return by.toLocalDate().equals(date.toLocalDate());
     }
 }

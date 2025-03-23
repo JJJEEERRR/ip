@@ -1,5 +1,8 @@
+package buddy.data;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import buddy.util.BuddyException;
 
 public class TaskList {
     private ArrayList<Task> tasks;
@@ -22,7 +25,7 @@ public class TaskList {
 
     public Task getTask(int index) throws BuddyException {
         if (index < 0 || index >= tasks.size()) {
-            throw new BuddyException("Task index out of range: " + (index + 1));
+            throw new BuddyException("buddy.data.Task index out of range: " + (index + 1));
         }
         return tasks.get(index);
     }
@@ -59,7 +62,7 @@ public class TaskList {
 
     public Task deleteTask(int index) throws BuddyException {
         if (index < 0 || index >= tasks.size()) {
-            throw new BuddyException("Task index out of range: " + (index + 1));
+            throw new BuddyException("buddy.data.Task index out of range: " + (index + 1));
         }
         return tasks.remove(index);
     }

@@ -1,3 +1,11 @@
+package buddy.storage;
+
+import buddy.data.Deadline;
+import buddy.data.Event;
+import buddy.data.Task;
+import buddy.data.Todo;
+import buddy.util.BuddyException;
+
 import java.io.*;
 import java.nio.file.*;
 import java.time.LocalDateTime;
@@ -115,7 +123,7 @@ public class Storage {
     private String convertTaskToFileLine(Task task) {
         StringBuilder sb = new StringBuilder();
 
-        // Task type
+        // buddy.data.Task type
         if (task instanceof Todo) {
             sb.append("T");
         } else if (task instanceof Deadline) {

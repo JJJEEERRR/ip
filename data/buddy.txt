@@ -1,21 +1,2 @@
-D | 1 | Complete assignment | 2025-03-25T18:00
-E | 0 | Team meeting | 2025-03-26T14:00 | 2025-03-26T16:00
-D | 0 | Assignment | 2025-03-25T18:00
-D | 1 | Report | 2025-03-27T23:00
-D | 0 | January task | 2025-01-01T09:00
-D | 0 | December task | 2025-12-31T23:59
-E | 0 | Late night meeting | 2025-03-25T23:59 | 2025-03-26T00:01
-T | 0 | Read book
-T | 0 | Read book
-D | 0 | Complete assignment | 2025-03-25T18:00
-E | 0 | Team meeting | 2025-03-26T14:00 | 2025-03-26T16:00
-T | 0 | Task 1
-T | 0 | Task 2
-D | 0 | Assignment | 2025-03-25T18:00
-E | 0 | Meeting | 2025-03-25T14:00 | 2025-03-25T16:00
-T | 0 | Read Java book
 T | 0 | Read a book
-T | 0 | Read a book
-D | 0 | Submit assignment | 2025-03-20T23:59
-E | 0 | Team meeting | 2025-03-25T14:00 | 2025-03-25T16:00
 E | 0 | Team meeting | 2025-03-25T14:00 | 2025-03-25T16:00

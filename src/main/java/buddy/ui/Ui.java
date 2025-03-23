@@ -1,3 +1,7 @@
+package buddy.ui;
+
+import buddy.data.Task;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,9 +21,9 @@ public class Ui {
     }
 
     public void showWelcome() {
-        String logo = "Buddy";
+        String logo = "buddy.Buddy";
         System.out.println("Hello from\n" + logo);
-        System.out.println("Hello! I'm Buddy");
+        System.out.println("Hello! I'm buddy.Buddy");
         System.out.println("What can I do for you?");
     }
 
