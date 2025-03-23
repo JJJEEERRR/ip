@@ -107,6 +107,10 @@ public class Ui {
         System.out.println(DIVIDER);
     }
 
+    public void showLine() {
+        System.out.println(DIVIDER);
+    }
+
     public void closeScanner() {
         scanner.close();
     }
