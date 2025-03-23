@@ -1,2 +1,9 @@
-T | 0 | borrow book
-D | 0 | return book | Sunday
+T | 0 | Read Java book
+D | 1 | Complete assignment | 2025-03-25T18:00
+E | 0 | Team meeting | 2025-03-26T14:00 | 2025-03-26T16:00
+D | 0 | Invalid date | 2025-03-23T14:58
+D | 0 | Assignment | 2025-03-25T18:00
+D | 1 | Report | 2025-03-27T23:00
+D | 0 | January task | 2025-01-01T09:00
+D | 0 | December task | 2025-12-31T23:59
+E | 0 | Late night meeting | 2025-03-25T23:59 | 2025-03-26T00:01

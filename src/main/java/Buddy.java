@@ -1,5 +1,8 @@
 import java.io.*;
 import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -7,6 +10,7 @@ public class Buddy {
     private ArrayList<Task> tasks = new ArrayList<>();
     private static final String DATA_FOLDER = "./data";
     private static final String DATA_FILE = DATA_FOLDER + "/buddy.txt";
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy");
 
     public static void main(String[] args) {
         new Buddy().run();
@@ -28,7 +32,7 @@ public class Buddy {
 
         while (true) {
             input = scanner.nextLine();
-            String[] parts = input.split(" ", 2); // 将输入分割为命令和描述
+            String[] parts = input.split(" ", 2); // Split input into command and description
             String command = parts[0];
             String description = parts.length > 1 ? parts[1] : "";
 
@@ -53,6 +57,24 @@ public class Buddy {
                     break;
                 case "delete":
                     deleteTask(parts);
+                    break;
+                case "find":
+                    if (description.trim().isEmpty()) {
+                        System.out.println("  ____________________________________________________________");
+                        System.out.println("  Please provide a keyword to search for.");
+                        System.out.println("  ____________________________________________________________");
+                    } else {
+                        findTasks(description);
+                    }
+                    break;
+                case "date":
+                    if (description.trim().isEmpty()) {
+                        System.out.println("  ____________________________________________________________");
+                        System.out.println("  Please provide a date in d/M/yyyy format.");
+                        System.out.println("  ____________________________________________________________");
+                    } else {
+                        listTasksOnDate(description);
+                    }
                     break;
                 default:
                     System.out.println("  ____________________________________________________________");
@@ -185,17 +207,19 @@ public class Buddy {
 
         // Additional data based on task type
         if (task instanceof Deadline) {
-            sb.append(" | ").append(((Deadline) task).by);
+            Deadline deadline = (Deadline) task;
+            sb.append(" | ").append(deadline.getByForStorage());
         } else if (task instanceof Event) {
-            sb.append(" | ").append(((Event) task).from);
-            sb.append(" | ").append(((Event) task).to);
+            Event event = (Event) task;
+            sb.append(" | ").append(event.getFromForStorage());
+            sb.append(" | ").append(event.getToForStorage());
         }
 
         return sb.toString();
     }
 
     private void addTask(String command, String description) {
-        // 检查任务描述是否为空
+        // Check if task description is empty
         if (description.trim().isEmpty()) {
             System.out.println("  ____________________________________________________________");
             System.out.println("  Whoops! You forgot to tell me what the task is! ");
@@ -213,10 +237,11 @@ public class Buddy {
                 if (deadlineParts.length != 2) {
                     System.out.println("  ____________________________________________________________");
                     System.out.println("  OOPS!!! Invalid deadline format. Please use: deadline <description> /by <date>");
+                    System.out.println("  Example: deadline return book /by 2/12/2023 1800");
                     System.out.println("  ____________________________________________________________");
                     return;
                 }
-                // 可以添加日期格式验证
+                // Create deadline with date
                 task = new Deadline(deadlineParts[0], deadlineParts[1]);
                 break;
             case "event":
@@ -224,10 +249,11 @@ public class Buddy {
                 if (eventParts.length != 3) {
                     System.out.println("  ____________________________________________________________");
                     System.out.println("  OOPS!!! Invalid event format. Please use: event <description> /from <start> /to <end>");
+                    System.out.println("  Example: event project meeting /from 6/8/2023 1400 /to 6/8/2023 1600");
                     System.out.println("  ____________________________________________________________");
                     return;
                 }
-                // 可以添加日期格式验证
+                // Create event with dates
                 task = new Event(eventParts[0], eventParts[1], eventParts[2]);
                 break;
         }
@@ -328,5 +354,64 @@ public class Buddy {
             System.out.println("  OOPS!!! Invalid task number.");
             System.out.println("  ____________________________________________________________");
         }
+    }
+
+    private void findTasks(String keyword) {
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.description.toLowerCase().contains(keyword.toLowerCase())) {
+                matchingTasks.add(task);
+            }
+        }
+
+        System.out.println("  ____________________________________________________________");
+        if (matchingTasks.isEmpty()) {
+            System.out.println("  No matching tasks found.");
+        } else {
+            System.out.println("  Here are the matching tasks in your list:");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                System.out.println("  " + (i + 1) + ". " + matchingTasks.get(i));
+            }
+        }
+        System.out.println("  ____________________________________________________________");
+    }
+
+    private void listTasksOnDate(String dateString) {
+        LocalDateTime searchDate;
+        try {
+            // Parse the date string to a LocalDateTime
+            searchDate = LocalDateTime.parse(dateString + " 0000", DATE_FORMATTER.ofPattern("d/M/yyyy HHmm"));
+        } catch (DateTimeParseException e) {
+            System.out.println("  ____________________________________________________________");
+            System.out.println("  Invalid date format. Please use d/M/yyyy format (e.g., 2/12/2023)");
+            System.out.println("  ____________________________________________________________");
+            return;
+        }
+
+        ArrayList<Task> matchingTasks = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task instanceof Deadline) {
+                Deadline deadline = (Deadline) task;
+                if (deadline.isOnDate(searchDate)) {
+                    matchingTasks.add(task);
+                }
+            } else if (task instanceof Event) {
+                Event event = (Event) task;
+                if (event.isOnDate(searchDate)) {
+                    matchingTasks.add(task);
+                }
+            }
+        }
+
+        System.out.println("  ____________________________________________________________");
+        System.out.println("  Tasks on " + searchDate.format(DateTimeFormatter.ofPattern("MMM d yyyy")) + ":");
+        if (matchingTasks.isEmpty()) {
+            System.out.println("  No tasks found on this date.");
+        } else {
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                System.out.println("  " + (i + 1) + ". " + matchingTasks.get(i));
+            }
+        }
+        System.out.println("  ____________________________________________________________");
     }
 }
