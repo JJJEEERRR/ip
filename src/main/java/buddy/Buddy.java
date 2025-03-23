@@ -1,3 +1,12 @@
+package buddy;
+
+import buddy.commands.Command;
+import buddy.data.TaskList;
+import buddy.storage.Storage;
+import buddy.ui.Ui;
+import buddy.util.BuddyException;
+import buddy.util.Parser;
+
 public class Buddy {
     private final Storage storage;
     private TaskList tasks;
@@ -21,7 +30,7 @@ public class Buddy {
         while (!isExit) {
             try {
                 String fullCommand = ui.readCommand();
-                ui.showLine(); // Show the divider line
+                ui.showLine();
                 Command command = Parser.parse(fullCommand);
                 command.execute(tasks, ui, storage);
                 isExit = command.isExit();

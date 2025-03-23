@@ -1,6 +1,6 @@
 Hello from
-Buddy
-Hello! I'm Buddy
+buddy.Buddy
+Hello! I'm buddy.Buddy
 What can I do for you?
   ____________________________________________________________
   Got it. I've added this task:
