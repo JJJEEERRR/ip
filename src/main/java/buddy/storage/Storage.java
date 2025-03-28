@@ -12,15 +12,30 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Handles data persistence for the Buddy application.
+ * Responsible for saving tasks to a file and loading them back.
+ */
 public class Storage {
     private final String filePath;
     private final String directory;
 
+    /**
+     * Creates a new Storage object with the specified file path.
+     *
+     * @param filePath The path to the file where tasks will be stored.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
         this.directory = filePath.substring(0, filePath.lastIndexOf('/'));
     }
 
+    /**
+     * Loads tasks from the storage file.
+     *
+     * @return A list of tasks read from the file.
+     * @throws BuddyException If there's an error reading the file or parsing the tasks.
+     */
     public ArrayList<Task> load() throws BuddyException {
         ArrayList<Task> tasks = new ArrayList<>();
         try {
@@ -52,6 +67,12 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the given list of tasks to the storage file.
+     *
+     * @param tasks The list of tasks to save.
+     * @throws BuddyException If there's an error writing to the file.
+     */
     public void save(ArrayList<Task> tasks) throws BuddyException {
         try {
             // Ensure directory exists
@@ -79,6 +100,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a line from the storage file into a Task object.
+     *
+     * @param line The line to parse.
+     * @return The parsed Task object.
+     * @throws BuddyException If there's an error parsing the task.
+     */
     private Task parseTaskFromFileLine(String line) throws BuddyException {
         try {
             String[] parts = line.split(" \\| ");
