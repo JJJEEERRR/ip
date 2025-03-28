@@ -70,4 +70,8 @@ public class Buddy {
     }
 }
 
+
 // All code comply with coding standard
+
+// Already implemented find command
+
