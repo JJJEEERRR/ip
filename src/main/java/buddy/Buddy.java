@@ -46,3 +46,5 @@ public class Buddy {
         new Buddy("./data/buddy.txt").run();
     }
 }
+
+// All code comply with coding standard
