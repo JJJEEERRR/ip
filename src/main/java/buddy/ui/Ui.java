@@ -7,19 +7,35 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Handles the user interface for the Buddy application.
+ * Responsible for displaying information to the user and collecting user input.
+ */
 public class Ui {
     private Scanner scanner;
     private static final String DIVIDER = "  ____________________________________________________________";
     private static final DateTimeFormatter DISPLAY_DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d yyyy");
 
+    /**
+     * Creates a new UI instance.
+     * Initializes the scanner for reading user input.
+     */
     public Ui() {
         scanner = new Scanner(System.in);
     }
 
+    /**
+     * Reads a command from the user input.
+     *
+     * @return The command entered by the user.
+     */
     public String readCommand() {
         return scanner.nextLine();
     }
 
+    /**
+     * Displays the welcome message when the application starts.
+     */
     public void showWelcome() {
         String logo = "buddy.Buddy";
         System.out.println("Hello from\n" + logo);
@@ -27,21 +43,39 @@ public class Ui {
         System.out.println("What can I do for you?");
     }
 
+    /**
+     * Displays the goodbye message when the application exits.
+     */
     public void showGoodbye() {
         System.out.println("Bye. Hope to see you again soon!");
     }
 
+    /**
+     * Displays an error message when task loading fails.
+     *
+     * @param message The error message to display.
+     */
     public void showLoadingError(String message) {
         System.out.println("Error loading tasks: " + message);
         System.out.println("Starting with an empty task list.");
     }
 
+    /**
+     * Displays a general error message.
+     *
+     * @param message The error message to display.
+     */
     public void showError(String message) {
         System.out.println(DIVIDER);
         System.out.println("  " + message);
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays the list of tasks.
+     *
+     * @param tasks The list of tasks to display.
+     */
     public void showTaskList(ArrayList<Task> tasks) {
         System.out.println(DIVIDER);
         System.out.println("  Here are the tasks in your list:");

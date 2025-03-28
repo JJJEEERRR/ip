@@ -7,12 +7,22 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Responsible for parsing user input into commands.
+ * Handles the different command formats and their arguments.
+ */
 public class Parser {
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
-    private static final DateTimeFormatter DATE_ONLY_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy[ HHmm]");
 
-    public static Command parse(String input) throws BuddyException {
-        String[] parts = input.split(" ", 2);
+    /**
+     * Parses a user input string into the corresponding command.
+     *
+     * @param userInput The raw user input to be parsed.
+     * @return A command object representing the user's intention.
+     * @throws BuddyException If the input format is invalid or the command is unknown.
+     */
+    public static Command parse(String userInput) throws BuddyException {
+        String[] parts = userInput.split(" ", 2);
         String commandType = parts[0].toLowerCase();
         String arguments = parts.length > 1 ? parts[1] : "";
 
