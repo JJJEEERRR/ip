@@ -145,6 +145,20 @@ public class Ui {
         System.out.println(DIVIDER);
     }
 
+    /**
+     * Displays a motivational quote to cheer the user with color formatting.
+     *
+     * @param quote The motivational quote to display
+     */
+    public void showCheer(String quote) {
+        final String ANSI_GREEN = "\u001B[32m";
+        final String ANSI_RESET = "\u001B[0m";
+
+        System.out.println(DIVIDER);
+        System.out.println("  " + ANSI_GREEN + quote + ANSI_RESET);
+        System.out.println(DIVIDER);
+    }
+
     public void showLine() {
         System.out.println(DIVIDER);
     }
