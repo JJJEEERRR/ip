@@ -75,6 +75,8 @@ public class Parser {
                 } catch (DateTimeParseException e) {
                     throw new BuddyException("Invalid date format. Please use d/M/yyyy format (e.g., 2/12/2023)");
                 }
+            case "cheer":
+                return new CheerCommand();
             default:
                 throw new BuddyException("Unknown command: " + commandType);
         }

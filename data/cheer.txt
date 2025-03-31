@@ -1,0 +1,15 @@
+Keep going – even the best programmers started out writing 'Hello World'!
+The only way to learn a new programming language is by writing programs in it.
+Sometimes it pays to stay in bed on Monday, rather than spending the rest of the week debugging Monday's code.
+First, solve the problem. Then, write the code.
+Programming isn't about what you know; it's about what you can figure out.
+The best error message is the one that never shows up.
+The more you code, the more you learn. The more you learn, the better you become.
+Good code is its own best documentation.
+Simplicity is the soul of efficiency.
+Make it work, make it right, make it fast.
+Programming is not about typing, it's about thinking.
+The computer was born to solve problems that did not exist before.
+Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live.
+Programming today is a race between software engineers striving to build bigger and better idiot-proof programs, and the universe trying to produce bigger and better idiots. So far, the universe is winning.
+Talk is cheap. Show me the code.

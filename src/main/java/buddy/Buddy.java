@@ -30,14 +30,14 @@ public class Buddy {
         while (!isExit) {
             try {
                 String fullCommand = ui.readCommand();
-                ui.showLine();
+                //ui.showLine();
                 Command command = Parser.parse(fullCommand);
                 command.execute(tasks, ui, storage);
                 isExit = command.isExit();
             } catch (BuddyException e) {
                 ui.showError(e.getMessage());
             } finally {
-                ui.showLine();
+                //ui.showLine();
             }
         }
     }
